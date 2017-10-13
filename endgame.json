@@ -1,0 +1,1578 @@
+{
+  "appid": "9f1f7d70-1424-4363-9850-bd979a4217ee",
+  "name": "Endgame",
+  "description": "This app integrates with Endgame to execute <b>investigative</b> actions",
+  "type": "endpoint",
+  "product_vendor": "Endgame",
+  "logo": "endgame.png",
+  "product_name": "Endgame",
+  "product_version_regex": ".*",
+  "publisher": "Phantom",
+  "license": "Copyright Phantom 2017",
+  "app_version": "1.0.1",
+  "utctime_updated": "2017-10-05T11:44:10.484117Z",
+  "package_name": "phantom_endgame",
+  "main_module": "endgame_connector.pyc",
+  "min_phantom_version": "3.0.251",
+  "app_wizard_version": "1.0.0",
+  "configuration": {
+    "url": {
+      "description": "URL",
+      "data_type": "string",
+      "required": true,
+      "value_list": [],
+      "default": "",
+      "order": 0
+    },
+    "verify_server_cert": {
+      "description": "Verify server certificate",
+      "data_type": "boolean",
+      "default": false,
+      "required": false,
+      "order": 1
+    },
+    "username": {
+      "description": "Username",
+      "data_type": "string",
+      "required": true,
+      "value_list": [],
+      "default": "",
+      "order": 2
+    },
+    "password": {
+      "description": "Password",
+      "data_type": "password",
+      "required": true,
+      "value_list": [],
+      "default": "",
+      "order": 3
+    }
+  },
+  "actions": [
+    {
+      "action": "test connectivity",
+      "identifier": "test_connectivity",
+      "description": "Validate the asset configuration for connectivity using supplied configuration",
+      "verbose": "",
+      "type": "test",
+      "read_only": true,
+      "parameters": {},
+      "output": [],
+      "versions": "EQ(*)"
+    },
+    {
+      "action": "list endpoints",
+      "identifier": "list_endpoints",
+      "description": "List all the endpoints/sensors configured on the device",
+      "verbose": "",
+      "type": "investigate",
+      "read_only": true,
+      "parameters": {
+        "tags": {
+          "description": "Name of tag",
+          "data_type": "string",
+          "required": false,
+          "primary": false,
+          "value_list": [],
+          "default": "",
+          "order": 0
+        },
+        "display_operating_system": {
+          "description": "Display operating system",
+          "data_type": "string",
+          "required": false,
+          "value_list": [],
+          "default": "",
+          "order": 1
+        },
+        "name": {
+          "description": "Name of endpoint",
+          "data_type": "string",
+          "required": false,
+          "primary": true,
+          "value_list": [],
+          "contains": [
+            "host name"
+          ],
+          "default": "",
+          "order": 2
+        },
+        "ip_address": {
+          "description": "IPv4 address",
+          "data_type": "string",
+          "required": false,
+          "primary": true,
+          "contains": [
+            "ip"
+          ],
+          "value_list": [],
+          "default": "",
+          "order": 3
+        },
+        "core_os": {
+          "description": "Core operating system",
+          "data_type": "string",
+          "required": false,
+          "primary": false,
+          "value_list": [],
+          "default": "",
+          "order": 4
+        },
+        "limit": {
+          "description": "Maximum number of endpoints to retrieve (Default: 50)",
+          "data_type": "numeric",
+          "required": false,
+          "primary": false,
+          "default": 50,
+          "order": 5
+        }
+      },
+      "render": {
+        "width": 12,
+        "height": 5,
+        "type": "custom",
+        "view": "endgame_view.display_action_details",
+        "title": "List Endpoints"
+      },
+      "output": [
+        {
+          "data_path": "action_result.data.*.status",
+          "data_type": "string",
+          "example_values": [
+            "monitored"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.domain",
+          "data_type": "string",
+          "example_values": [
+            "InstallerInitiated"
+          ],
+          "contains": [
+            "domain"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.error",
+          "data_type": "string",
+          "example_values": [
+            ""
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.operating_system",
+          "data_type": "string",
+          "example_values": [
+            "centos 7.3.1611"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.name",
+          "data_type": "string",
+          "example_values": [
+            "endgame-01-t1"
+          ],
+          "contains": [
+            "host name"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.tags.*.id",
+          "data_type": "string",
+          "example_values": [
+            "4aa09b0a-968a-4e40-9130-c9f4e60e15e4"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.tags.*.name",
+          "data_type": "string",
+          "example_values": [
+            "SAFE-TESTS-ONLY"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.status_changed_at",
+          "data_type": "numeric",
+          "example_values": [
+            1505116206494.56
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.core_os",
+          "data_type": "string",
+          "example_values": [
+            "linux"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_at",
+          "data_type": "string",
+          "example_values": [
+            "2017-09-08T21:04:24.957075+00:00"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.hostname",
+          "data_type": "string",
+          "example_values": [
+            "endgame-01-t1"
+          ],
+          "contains": [
+            "host name"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.updated_at",
+          "data_type": "string",
+          "example_values": [
+            "2017-09-11T07:50:03.871712+00:00"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.alert_count",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.investigation_count",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.mac_address",
+          "data_type": "string",
+          "example_values": [
+            "00:0c:29:fa:d0:de"
+          ],
+          "contains": [
+            "mac address"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.id",
+          "data_type": "string",
+          "example_values": [
+            "934d4ef9-5015-47bd-866f-f4420408022b"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.sensors.*.status",
+          "data_type": "string",
+          "example_values": [
+            "Active"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.sensors.*.sensor_version",
+          "data_type": "string",
+          "example_values": [
+            "2.4.12"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.sensors.*.sensor_type",
+          "data_type": "string",
+          "example_values": [
+            "hunt"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.sensors.*.id",
+          "data_type": "string",
+          "example_values": [
+            "e6d311e5-3cfe-5e68-bf16-433d2ff07f1c"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.machine_id",
+          "data_type": "string",
+          "example_values": [
+            "cdcb7ff1-5da4-6c9e-f341-c0d146ee1c4a"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.ip_address",
+          "data_type": "string",
+          "example_values": [
+            "10.16.8.47"
+          ],
+          "contains": [
+            "ip"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.display_operating_system",
+          "data_type": "string",
+          "example_values": [
+            "CentOS 7.3"
+          ]
+        },
+        {
+          "data_path": "action_result.status",
+          "data_type": "string",
+          "example_values": [
+            "success",
+            "failed"
+          ]
+        },
+        {
+          "data_path": "action_result.message",
+          "data_type": "string",
+          "example_values": [
+            "Total endpoints: 1"
+          ]
+        },
+        {
+          "data_path": "action_result.parameter.tags",
+          "data_type": "string",
+          "example_values": [
+            "SAFE-TESTS-ONLY"
+          ]
+        },
+        {
+          "data_path": "action_result.parameter.display_operating_system",
+          "data_type": "string",
+          "example_values": [
+            "CentOS 7.3"
+          ]
+        },
+        {
+          "data_path": "action_result.parameter.name",
+          "data_type": "string",
+          "example_values": [
+            "endgame-01-t1"
+          ],
+          "contains": [
+            "host name"
+          ]
+        },
+        {
+          "data_path": "action_result.parameter.ip_address",
+          "data_type": "string",
+          "contains": [
+            "ip"
+          ],
+          "example_values": [
+            "10.16.8.47"
+          ]
+        },
+        {
+          "data_path": "action_result.parameter.core_os",
+          "data_type": "string",
+          "example_values": [
+            "linux"
+          ]
+        },
+        {
+          "data_path": "action_result.parameter.limit",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.summary.total_endpoints",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "summary.total_objects",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "summary.total_objects_successful",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        }
+      ],
+      "versions": "EQ(*)"
+    },
+    {
+      "action": "get investigation",
+      "identifier": "get_investigation",
+      "description": "Get information about an investigation",
+      "verbose": "",
+      "type": "investigate",
+      "read_only": true,
+      "parameters": {
+        "investigation_id": {
+          "description": "Investigation ID",
+          "data_type": "string",
+          "required": true,
+          "primary": true,
+          "contains": [
+            "endgame investigation id"
+          ],
+          "value_list": [],
+          "default": "",
+          "order": 0
+        }
+      },
+      "render": {
+        "width": 12,
+        "height": 5,
+        "type": "custom",
+        "view": "endgame_view.display_action_details",
+        "title": "Get Investigation"
+      },
+      "output": [
+        {
+          "data_path": "action_result.data.*.tasks",
+          "data_type": "string",
+          "example_values": [
+            "04e3849a-d354-4997-b474-346fa8d08b08"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.canceled_by_user_id",
+          "data_type": "string",
+          "example_values": [
+            ""
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.canceled_by_user_display_name",
+          "data_type": "string",
+          "example_values": [
+            "Admin User"
+          ],
+          "contains": [
+            "user name"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.user_display_name",
+          "data_type": "string",
+          "example_values": [
+            "Admin User"
+          ],
+          "contains": [
+            "user name"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_types",
+          "data_type": "string",
+          "example_values": [
+            "Process Survey"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completion.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completion.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.updated_at",
+          "data_type": "string",
+          "example_values": [
+            "2017-09-08T21:31:28.817225+00:00"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by_user_display_name",
+          "data_type": "string",
+          "example_values": [
+            "Admin User"
+          ],
+          "contains": [
+            "user name"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.id",
+          "data_type": "string",
+          "example_values": [
+            "115cd213-af49-4e31-88c7-b505dfc9dfef"
+          ],
+          "contains": [
+            "endgame investigation id"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by_user_id",
+          "data_type": "string",
+          "example_values": [
+            "a48c72bb-c44c-4fe8-9ef3-055e0b0b9675"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.archived",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.user_id",
+          "data_type": "string",
+          "example_values": [
+            "a48c72bb-c44c-4fe8-9ef3-055e0b0b9675"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.is_canceled",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.username",
+          "data_type": "string",
+          "example_values": [
+            "Admin"
+          ],
+          "contains": [
+            "user name"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.first_name",
+          "data_type": "string",
+          "example_values": [
+            "Admin"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.last_name",
+          "data_type": "string",
+          "example_values": [
+            "User"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.last_viewed_alert",
+          "data_type": "string",
+          "example_values": [
+            "1970-01-01T00:00:00"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.is_active",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.is_superuser",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.is_ldap",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.role",
+          "data_type": "string",
+          "example_values": [
+            "Admin"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.id",
+          "data_type": "string",
+          "example_values": [
+            "37e9e54e-0bb8-5058-9bd4-50a0d0fbea35"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.endpoints.scan",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.sensor.admin.view",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.sensor.admin.update",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.endpoints.delete",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.investigation.create",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.endpoints.respond",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.search.search",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.sensor.admin.create",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.endpoints.tag",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.user.delete",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.endpoints.deploy",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.user.update",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.search.save",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.alerts.admin.forwardalerts",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.endpoints.view",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.user.view",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.sensor.admin.download",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.alerts.view",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.alerts.update",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.search.delete",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.sensor.admin.delete",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.endpoints.uninstall",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.investigation.view",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.admin",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.investigation.update",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.endpoints.changeconfiguration",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.role.permissions.user.create",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.is_removable",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by.id",
+          "data_type": "string",
+          "example_values": [
+            "a48c72bb-c44c-4fe8-9ef3-055e0b0b9675"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.hunt_count",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Software Survey.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Software Survey.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Software Survey.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Process Search.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Process Search.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Process Search.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Dirwalk.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Dirwalk.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Dirwalk.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.User Sessions Survey.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.User Sessions Survey.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.User Sessions Survey.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Process Survey.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Process Survey.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Process Survey.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "27e2df6e-785b-56db-8566-bae8933cc558"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Removable Media Survey.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Removable Media Survey.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Removable Media Survey.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.System Survey.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.System Survey.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.System Survey.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.System Network Search.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.System Network Search.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.System Network Search.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.System Network Survey.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.System Network Survey.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.System Network Survey.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Registry Query.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Registry Query.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Registry Query.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.File Search.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.File Search.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.File Search.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.User Sessions Search.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.User Sessions Search.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.User Sessions Search.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Kernel Modules Survey.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Kernel Modules Survey.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Kernel Modules Survey.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Collect Auto Runs.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Collect Auto Runs.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Collect Auto Runs.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Firewall Survey.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Firewall Survey.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Firewall Survey.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Registry Search.completed_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            0
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Registry Search.total_tasks",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.task_completions_by_type.Registry Search.task_type_id",
+          "data_type": "string",
+          "example_values": [
+            "f995ccab-8a7c-55e7-b053-e824a7469c95"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.account_id",
+          "data_type": "string",
+          "example_values": [
+            "e9659fbd-e0a7-45d6-9d14-939aa3248f60"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_by_chat",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.sensors",
+          "data_type": "string",
+          "example_values": [
+            "e6d311e5-3cfe-5e68-bf16-433d2ff07f0c"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.name",
+          "data_type": "string",
+          "example_values": [
+            "Look for Suspicious Processes"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.core_os",
+          "data_type": "string",
+          "example_values": [
+            "linux"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.created_at",
+          "data_type": "string",
+          "example_values": [
+            "2017-09-08T21:31:28.770031+00:00"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.username",
+          "data_type": "string",
+          "example_values": [
+            "Admin"
+          ],
+          "contains": [
+            "user name"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.first_name",
+          "data_type": "string",
+          "example_values": [
+            "Admin"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.last_name",
+          "data_type": "string",
+          "example_values": [
+            "User"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.last_viewed_alert",
+          "data_type": "string",
+          "example_values": [
+            "1970-01-01T00:00:00"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.is_active",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.is_superuser",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.is_ldap",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.role",
+          "data_type": "string",
+          "example_values": [
+            "Admin"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.id",
+          "data_type": "string",
+          "example_values": [
+            "37e9e54e-0bb8-5058-9bd4-50a0d0fbea35"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.endpoints.scan",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.sensor.admin.view",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.sensor.admin.update",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.endpoints.delete",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.investigation.create",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.endpoints.respond",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.search.search",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.sensor.admin.create",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.endpoints.tag",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.user.delete",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.endpoints.deploy",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.user.update",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.search.save",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.alerts.admin.forwardalerts",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.endpoints.view",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.user.view",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.sensor.admin.download",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.alerts.view",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.alerts.update",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.search.delete",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.sensor.admin.delete",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.endpoints.uninstall",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.investigation.view",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.admin",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.investigation.update",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.endpoints.changeconfiguration",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.role.permissions.user.create",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.is_removable",
+          "data_type": "boolean",
+          "example_values": [
+            true,
+            false
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.assigned_to.id",
+          "data_type": "string",
+          "example_values": [
+            "a48c72bb-c44c-4fe8-9ef3-055e0b0b9675"
+          ]
+        },
+        {
+          "data_path": "action_result.data.*.endpoints",
+          "data_type": "string",
+          "example_values": [
+            "934d4ef9-5015-47bd-866f-f4420408011b"
+          ]
+        },
+        {
+          "data_path": "action_result.status",
+          "data_type": "string",
+          "example_values": [
+            "success",
+            "failed"
+          ]
+        },
+        {
+          "data_path": "action_result.message",
+          "data_type": "string",
+          "example_values": [
+            "Investigation found"
+          ]
+        },
+        {
+          "data_path": "action_result.parameter.investigation_id",
+          "data_type": "string",
+          "example_values": [
+            "115cd213-af49-4e31-88c7-b505dfc9dfef"
+          ],
+          "contains": [
+            "endgame investigation id"
+          ]
+        },
+        {
+          "data_path": "summary.total_objects",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        },
+        {
+          "data_path": "summary.total_objects_successful",
+          "data_type": "numeric",
+          "example_values": [
+            1
+          ]
+        }
+      ],
+      "versions": "EQ(*)"
+    }
+  ]
+}
