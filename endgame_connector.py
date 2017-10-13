@@ -68,6 +68,12 @@ class EndgameConnector(BaseConnector):
         return phantom.APP_SUCCESS
 
     def _process_empty_response(self, response, action_result):
+        """ This function is used to process empty response.
+
+        :param response: response data
+        :param action_result: object of Action Result
+        :return: status phantom.APP_ERROR/phantom.APP_SUCCESS(along with appropriate message)
+        """
 
         if response.status_code == 200:
             return RetVal(phantom.APP_SUCCESS, {})
@@ -76,6 +82,12 @@ class EndgameConnector(BaseConnector):
                       None)
 
     def _process_html_response(self, response, action_result):
+        """ This function is used to process html response.
+
+        :param response: response data
+        :param action_result: object of Action Result
+        :return: status phantom.APP_ERROR/phantom.APP_SUCCESS(along with appropriate message)
+        """
 
         # An html response, treat it like an error
         status_code = response.status_code
@@ -97,6 +109,12 @@ class EndgameConnector(BaseConnector):
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
     def _process_json_response(self, response, action_result):
+        """ This function is used to process json response.
+
+        :param response: response data
+        :param action_result: object of Action Result
+        :return: status phantom.APP_ERROR/phantom.APP_SUCCESS(along with appropriate message)
+        """
 
         # Try a json parse
         try:
@@ -110,6 +128,9 @@ class EndgameConnector(BaseConnector):
         if response.status_code == 200:
             return RetVal(phantom.APP_SUCCESS, resp_json)
 
+        if self.get_action_identifier() == "get_investigation" and response.status_code == 404:
+            resp_json["error"]["message"] = "Given investigation not found"
+
         message = "Error from server. Status Code: {0} Data from server: {1}".format(response.status_code,
                                                                                      response.text.replace('{', '{{').
                                                                                      replace('}', '}}'))
@@ -122,6 +143,12 @@ class EndgameConnector(BaseConnector):
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
     def _process_response(self, response, action_result):
+        """ This function is used to process html response.
+
+        :param response: response data
+        :param action_result: object of Action Result
+        :return: status phantom.APP_ERROR/phantom.APP_SUCCESS(along with appropriate message)
+        """
 
         # store the r_text in debug data, it will get dumped in the logs if the action fails
         if hasattr(action_result, 'add_debug_data'):

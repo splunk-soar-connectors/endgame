@@ -9,11 +9,11 @@
   "product_version_regex": ".*",
   "publisher": "Phantom",
   "license": "Copyright Phantom 2017",
-  "app_version": "1.0.0",
+  "app_version": "1.0.1",
   "utctime_updated": "2017-10-05T11:44:10.484117Z",
   "package_name": "phantom_endgame",
   "main_module": "endgame_connector.pyc",
-  "min_phantom_version": "3.0.247",
+  "min_phantom_version": "3.0.251",
   "app_wizard_version": "1.0.0",
   "configuration": {
     "url": {
@@ -401,7 +401,7 @@
     {
       "action": "get investigation",
       "identifier": "get_investigation",
-      "description": "Get an investigation information using ID",
+      "description": "Get information about an investigation",
       "verbose": "",
       "type": "investigate",
       "read_only": true,
