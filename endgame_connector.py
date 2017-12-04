@@ -57,6 +57,9 @@ class EndgameConnector(BaseConnector):
 
         self._state = self.load_state()
 
+        if ENDGAME_STATE_TASK_DICT not in self._state:
+            self._state[ENDGAME_STATE_TASK_DICT] = {}
+
         # get the asset config
         config = self.get_config()
         self._token = self._state.get("token")
@@ -66,6 +69,17 @@ class EndgameConnector(BaseConnector):
         self._password = config['password']
         self._verify_server_cert = config.get('verify_server_cert', False)
 
+        return phantom.APP_SUCCESS
+
+    def finalize(self):
+        """ This function gets called once all the param dictionary elements are looped over and no more handle_action
+        calls are left to be made. It gives the AppConnector a chance to loop through all the results that were
+        accumulated by multiple handle_action function calls and create any summary if required. Another usage is
+        cleanup, disconnect from remote devices etc.
+        """
+
+        # Save the state, this data is saved across actions and app upgrades
+        self.save_state(self._state)
         return phantom.APP_SUCCESS
 
     def _process_empty_response(self, response, action_result):
@@ -419,7 +433,31 @@ class EndgameConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
-    def _launch_investigation(self, action_result, request_body, result_scope):
+    def _get_task_id(self, action_result, task):
+
+        spl_task = task.split('_')
+        task_name = spl_task[0]
+        platform = spl_task[1]
+
+        ret_val, resp_json = self._make_rest_call_abstract(ENDGAME_TASK_DESCRIPTIONS_ENDPOINT, action_result, method='get')
+
+        if phantom.is_fail(ret_val):
+            return ret_val
+
+        found = False
+        for description in resp_json['data']:
+            if description.get('name') == task_name and description.get('sensor_type') == platform:
+                found = True
+                break
+
+        if not found:
+            return action_result.set_status(phantom.APP_ERROR, "Could not find task ID")
+
+        self._state[ENDGAME_STATE_TASK_DICT][task] = description['id']
+
+        return description['id']
+
+    def _launch_investigation(self, action_result, request_body, result_scope, task):
         """ This function launches, then grabs the results of an investigation.
 
         :param request_body: body of request to launch investigation
@@ -431,7 +469,12 @@ class EndgameConnector(BaseConnector):
         ret_val, resp_json = self._make_rest_call_abstract(ENDGAME_LAUNCH_INVESTIGATION_ENDPOINT, action_result, data=json.dumps(request_body))
 
         if phantom.is_fail(ret_val):
-            return ret_val
+
+            if ENDGAME_ERR_BAD_TASK_ID in action_result.get_message() or ENDGAME_ERR_BAD_TASK_PARAMS in action_result.get_message():
+                self._state[ENDGAME_STATE_TASK_DICT][task] = None
+                action_result.append_to_message('\nRefreshed bad task ID. Please try again.')
+            else:
+                return ret_val
 
         investigation_id = resp_json.get('data', {}).get('id')
 
@@ -489,6 +532,16 @@ class EndgameConnector(BaseConnector):
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
         action_result = self.add_action_result(ActionResult(dict(param)))
 
+        task = '{0}_{1}'.format(ENDGAME_HUNT_IOC_TASK_NAME, param['platform'])
+
+        task_id = self._state[ENDGAME_STATE_TASK_DICT].get(task)
+
+        if not task_id:
+            task_id = self._get_task_id(action_result, task)
+
+        if phantom.is_fail(task_id):
+            return task_id
+
         users = param['user'].split(',')
 
         task_params = {"find_username": users}
@@ -499,12 +552,12 @@ class EndgameConnector(BaseConnector):
         body = {
             "sensor_ids": param['sensors'].split(','),
             "name": param['name'],
-            "tasks": {ENDGAME_HUNT_IOC_TASK_ID: {"task_list": [{"username_search": task_params}]}},
+            "tasks": {task_id: {"task_list": [{"username_search": task_params}]}},
             "assign_to": param['assignee'],
-            "core_os": param['platform'].lower()
+            "core_os": param['platform']
         }
 
-        if phantom.is_fail(self._launch_investigation(action_result, body, 'user_sessions')):
+        if phantom.is_fail(self._launch_investigation(action_result, body, 'user_sessions', task)):
             return action_result.get_status()
 
         return action_result.set_status(phantom.APP_SUCCESS)
@@ -519,6 +572,16 @@ class EndgameConnector(BaseConnector):
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
         action_result = self.add_action_result(ActionResult(dict(param)))
 
+        task = '{0}_{1}'.format(ENDGAME_HUNT_IOC_TASK_NAME, 'windows')
+
+        task_id = self._state[ENDGAME_STATE_TASK_DICT].get(task)
+
+        if not task_id:
+            task_id = self._get_task_id(action_result, task)
+
+        if phantom.is_fail(task_id):
+            return task_id
+
         keys = param['key'].split(',')
 
         task_params = {
@@ -529,12 +592,12 @@ class EndgameConnector(BaseConnector):
         body = {
             "sensor_ids": param['sensors'].split(','),
             "name": param['name'],
-            "tasks": {ENDGAME_HUNT_IOC_TASK_ID: {"task_list": [{"registry_search": task_params}]}},
+            "tasks": {task_id: {"task_list": [{"registry_search": task_params}]}},
             "assign_to": param['assignee'],
             "core_os": 'windows'
         }
 
-        if phantom.is_fail(self._launch_investigation(action_result, body, 'values')):
+        if phantom.is_fail(self._launch_investigation(action_result, body, 'values', task)):
             return action_result.get_status()
 
         return action_result.set_status(phantom.APP_SUCCESS)
@@ -549,6 +612,16 @@ class EndgameConnector(BaseConnector):
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
         action_result = self.add_action_result(ActionResult(dict(param)))
 
+        task = '{0}_{1}'.format(ENDGAME_HUNT_IOC_TASK_NAME, param['platform'])
+
+        task_id = self._state[ENDGAME_STATE_TASK_DICT].get(task)
+
+        if not task_id:
+            task_id = self._get_task_id(action_result, task)
+
+        if phantom.is_fail(task_id):
+            return task_id
+
         ips = param['ip'].split(',')
 
         task_params = {
@@ -560,12 +633,12 @@ class EndgameConnector(BaseConnector):
         body = {
             "sensor_ids": param['sensors'].split(','),
             "name": param['name'],
-            "tasks": {ENDGAME_HUNT_IOC_TASK_ID: {"task_list": [{"network_search": task_params}]}},
+            "tasks": {task_id: {"task_list": [{"network_search": task_params}]}},
             "assign_to": param['assignee'],
-            "core_os": param['platform'].lower()
+            "core_os": param['platform']
         }
 
-        if phantom.is_fail(self._launch_investigation(action_result, body, 'connections')):
+        if phantom.is_fail(self._launch_investigation(action_result, body, 'connections', task)):
             return action_result.get_status()
 
         return action_result.set_status(phantom.APP_SUCCESS)
@@ -579,6 +652,16 @@ class EndgameConnector(BaseConnector):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
         action_result = self.add_action_result(ActionResult(dict(param)))
+
+        task = '{0}_{1}'.format(ENDGAME_HUNT_IOC_TASK_NAME, param['platform'])
+
+        task_id = self._state[ENDGAME_STATE_TASK_DICT].get(task)
+
+        if not task_id:
+            task_id = self._get_task_id(action_result, task)
+
+        if phantom.is_fail(task_id):
+            return task_id
 
         processes = param['process'].split(',')
 
@@ -611,12 +694,12 @@ class EndgameConnector(BaseConnector):
         body = {
             "sensor_ids": param['sensors'].split(','),
             "name": param['name'],
-            "tasks": {ENDGAME_HUNT_IOC_TASK_ID: {"task_list": [{"process_search": task_params}]}},
+            "tasks": {task_id: {"task_list": [{"process_search": task_params}]}},
             "assign_to": param['assignee'],
-            "core_os": param['platform'].lower()
+            "core_os": param['platform']
         }
 
-        if phantom.is_fail(self._launch_investigation(action_result, body, 'processes')):
+        if phantom.is_fail(self._launch_investigation(action_result, body, 'processes', task)):
             return action_result.get_status()
 
         return action_result.set_status(phantom.APP_SUCCESS)
@@ -630,6 +713,16 @@ class EndgameConnector(BaseConnector):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
         action_result = self.add_action_result(ActionResult(dict(param)))
+
+        task = '{0}_{1}'.format(ENDGAME_HUNT_IOC_TASK_NAME, param['platform'])
+
+        task_id = self._state[ENDGAME_STATE_TASK_DICT].get(task)
+
+        if not task_id:
+            task_id = self._get_task_id(action_result, task)
+
+        if phantom.is_fail(task_id):
+            return task_id
 
         md5s = []
         sha1s = []
@@ -659,17 +752,17 @@ class EndgameConnector(BaseConnector):
         body = {
             "sensor_ids": param['sensors'].split(','),
             "name": param['name'],
-            "tasks": {ENDGAME_HUNT_IOC_TASK_ID: {"task_list": [{"file_search": task_params}]}},
+            "tasks": {task_id: {"task_list": [{"file_search": task_params}]}},
             "assign_to": param['assignee'],
-            "core_os": param['platform'].lower()
+            "core_os": param['platform']
         }
 
-        if phantom.is_fail(self._launch_investigation(action_result, body, 'file_list')):
+        if phantom.is_fail(self._launch_investigation(action_result, body, 'file_list', task)):
             return action_result.get_status()
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
-    def _launch_task(self, action_result, request_body):
+    def _launch_task(self, action_result, request_body, task):
         """ This function launches, then grabs the results of a task.
 
         :param action_result: object of ActionResult class
@@ -680,7 +773,11 @@ class EndgameConnector(BaseConnector):
         ret_val, resp_json = self._make_rest_call_abstract(ENDGAME_TASKS_ENDPOINT, action_result, data=json.dumps(request_body))
 
         if phantom.is_fail(ret_val):
-            return RetVal(ret_val, None)
+            if ENDGAME_ERR_BAD_TASK_ID in action_result.get_message() or ENDGAME_ERR_BAD_TASK_PARAMS in action_result.get_message():
+                self._state[ENDGAME_STATE_TASK_DICT][task] = None
+                action_result.append_to_message('\nRefreshed bad task ID. Please try again.')
+            else:
+                return RetVal(ret_val, None)
 
         bulk_task_id = resp_json.get('data', {}).get('bulk_task_id')
 
@@ -713,14 +810,24 @@ class EndgameConnector(BaseConnector):
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
         action_result = self.add_action_result(ActionResult(dict(param)))
 
+        task = '{0}_{1}'.format(ENDGAME_HUNT_KILL_PROCESS_TASK_NAME, param['platform'])
+
+        task_id = self._state[ENDGAME_STATE_TASK_DICT].get(task)
+
+        if not task_id:
+            task_id = self._get_task_id(action_result, task)
+
+        if phantom.is_fail(task_id):
+            return task_id
+
         body = {
-            "description_id": ENDGAME_HUNT_KILL_PROCESS_TASK_ID,
+            "description_id": task_id,
             "sensor_ids": param['sensors'].split(','),
             "task": {"pid": int(param['pid'])},
             "core_os": param['platform'].lower()
         }
 
-        ret_val, resp = self._launch_task(action_result, body)
+        ret_val, resp = self._launch_task(action_result, body, task)
 
         if phantom.is_fail(ret_val):
             return ret_val
@@ -760,17 +867,6 @@ class EndgameConnector(BaseConnector):
             raise ValueError("action {action} is not supported".format(action=action))
 
         return run_action(param)
-
-    def finalize(self):
-        """ This function gets called once all the param dictionary elements are looped over and no more handle_action
-        calls are left to be made. It gives the AppConnector a chance to loop through all the results that were
-        accumulated by multiple handle_action function calls and create any summary if required. Another usage is
-        cleanup, disconnect from remote devices etc.
-        """
-
-        # Save the state, this data is saved across actions and app upgrades
-        self.save_state(self._state)
-        return phantom.APP_SUCCESS
 
 
 if __name__ == '__main__':

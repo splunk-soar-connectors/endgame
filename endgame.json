@@ -779,6 +779,11 @@
                     "description": "OS of sensors",
                     "data_type": "string",
                     "required": true,
+                    "value_list": [
+                        "windows",
+                        "linux"
+                    ],
+                    "default": "windows",
                     "order": 3
                 },
                 "assignee": {
@@ -1739,6 +1744,11 @@
                     "description": "OS of sensors",
                     "data_type": "string",
                     "required": true,
+                    "value_list": [
+                        "windows",
+                        "linux"
+                    ],
+                    "default": "windows",
                     "order": 3
                 },
                 "assignee": {
@@ -2275,6 +2285,11 @@
                     "description": "OS of sensors",
                     "data_type": "string",
                     "required": true,
+                    "value_list": [
+                        "windows",
+                        "linux"
+                    ],
+                    "default": "windows",
                     "order": 3
                 },
                 "assignee": {
@@ -3012,6 +3027,11 @@
                     "description": "OS of sensors",
                     "data_type": "string",
                     "required": true,
+                    "value_list": [
+                        "windows",
+                        "linux"
+                    ],
+                    "default": "windows",
                     "order": 3
                 },
                 "assignee": {
@@ -3508,6 +3528,11 @@
                     "description": "OS of sensors",
                     "data_type": "string",
                     "required": true,
+                    "value_list": [
+                        "windows",
+                        "linux"
+                    ],
+                    "default": "windows",
                     "order": 3
                 }
             },
