@@ -1,10 +1,6 @@
 {% extends 'widgets/widget_template.html' %}
 {% load custom_template %}
 
-{% block title_color %}{{ title_color|default:'white' }}{% endblock %}
-{% block title_text_color %}{{ title_text_color|default:'rgb(101, 71, 150)' }}{% endblock %}
-{% block body_color %}{{ body_color|default:'white' }}{% endblock %}
-{% block body_text_color %}{{ body_text_color|default:'black' }}{% endblock %}
 {% block custom_title_prop %}{% if title_logo %}style="background-size: auto 60%; background-position: 50%; background-repeat: no-repeat; background-image: url('/app_resource/{{ title_logo }}');"{% endif %}{% endblock %}
 {% block title1 %}{{ title1 }}{% endblock %}
 {% block title2 %}{{ title2 }}{% endblock %}
@@ -27,16 +23,8 @@ of Phantom Cyber Corporation.
 -->
 <style>
 
-    .endgame-endpoints a:link {
-    color: black;
-    }
-
     .endgame-endpoints a:hover {
     text-decoration:underline;
-    }
-
-    .endgame-endpoints a:visited {
-    color: black;
     }
 
     .endgame-endpoints .wf-h4-style {
@@ -49,9 +37,8 @@ of Phantom Cyber Corporation.
     }
 
     .endgame-endpoints .wf-table-vertical td{
-    color: #000;
     padding: 5px;
-    border: 1px solid rgb(234, 234, 234) !important;
+    border: 1px !important;
     }
 
     .endgame-endpoints .wf-table-vertical tr td:first-child {
@@ -67,13 +54,8 @@ of Phantom Cyber Corporation.
         border-top: 1px solid #eee !important;
     }
 
-    .endgame-endpoints .dataTable td {
-        color: #000 !important;
-    }
-
     .endgame-endpoints .dataTable td.widget-td a{
         font-size: 12px;
-        color: #000;
     }
 
     .endgame-endpoints .dataTable .glyphicon.glyphicon-dot:before {
@@ -154,6 +136,7 @@ of Phantom Cyber Corporation.
                 <th class="widget-th">Endpoint Name</th>
                 <th class="widget-th">IP Address</th>
                 <th class="widget-th">OS</th>
+                <th class="widget-th">Sensor ID</th>
                 <th class="widget-th">Alerts</th>
                 <th class="widget-th">Tags</th>
                 <th class="widget-th">Status</th>
@@ -179,6 +162,17 @@ of Phantom Cyber Corporation.
                     </a>
                 </td>
                 <td class="widget-td">{{ item.display_operating_system }}</td>
+                <td class="widget-td">
+                        {% for sensor in item.sensors %}
+                            <a class="nowrap" href="javascript:;"
+                               onclick="context_menu(this, [{'contains': ['endgame sensor id'], 'value': '{{ sensor.id }}' }], 0, {{ container.id }}, null, false);">
+                            {{ sensor.id}}
+                            {% if not forloop.last %}<br/> {% endif %}
+                        {% endfor %}
+                        &nbsp;
+                        <span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                    </a>
+                </td>
                 <td class="widget-td">{{ item.alert_count }}</td>
                 <td class="widget-td">
                     {% for tag in item.tags %}
