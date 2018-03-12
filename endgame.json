@@ -2846,6 +2846,20 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.data.data.results.*.modules.*.mapped_address",
+                    "data_type": "string",
+                    "example_values": [
+                        140701652549632
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.data.data.results.*.modules.*.mapped_size",
+                    "data_type": "string",
+                    "example_values": [
+                        53248
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.data.data.results.*.parent_exe",
                     "data_type": "string",
                     "example_values": [
