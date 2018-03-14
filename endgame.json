@@ -2324,6 +2324,8 @@
                     "example_values": [
                         "3636"
                     ],
+                    "column_name": "PID",
+                    "column_order": 0,
                     "contains": [
                         "pid"
                     ]
@@ -2634,6 +2636,8 @@
                 {
                     "data_path": "action_result.data.*.data.status",
                     "data_type": "string",
+                    "column_name": "Status",
+                    "column_order": 2,
                     "example_values": [
                         "success"
                     ]
@@ -2696,6 +2700,8 @@
                 {
                     "data_path": "action_result.message",
                     "data_type": "string",
+                    "column_name": "Message",
+                    "column_order": 1,
                     "example_values": [
                         "Successfully killed process"
                     ]
