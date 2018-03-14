@@ -427,7 +427,9 @@ class EndgameConnector(BaseConnector):
         if phantom.is_fail(response_status):
             return action_result.get_status()
 
-        action_result.add_data(response['data'])
+        for result in response.get('data', []):
+            action_result.add_data(result)
+
         summary = action_result.update_summary({})
         summary['num_users'] = len(response['data'])
 
@@ -517,8 +519,11 @@ class EndgameConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             return ret_val
 
-        action_result.add_data(resp_json)
-        action_result.set_summary({'num_results': len(resp_json.get('data', {}).get('data', {}).get('results', []))})
+        results = resp_json.get('data', {'data': {}}).pop('data').get('results', [])
+        for result in results:
+            action_result.add_data(result)
+
+        action_result.set_summary({'num_results': len(results)})
 
         return phantom.APP_SUCCESS
 
